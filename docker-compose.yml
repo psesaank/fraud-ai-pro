@@ -1,0 +1,28 @@
+
+services:
+  green:
+    build: ./backend
+    container_name: fraud_green
+
+  blue:
+    build: ./backend
+    container_name: fraud_blue
+
+  nginx:
+    image: nginx:latest
+    container_name: fraud_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - green
+      - blue
+
+  ui:
+    build: ./frontend
+    container_name: fraud_ui
+    ports:
+      - "8501:8501"
+    depends_on:
+      - nginx
